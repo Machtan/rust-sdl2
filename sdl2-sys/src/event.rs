@@ -1,7 +1,6 @@
 #![doc(hidden)]
 #![allow(non_camel_case_types, non_snake_case)]
-use libc::{c_float, c_int, c_char, c_uint, c_void, int16_t,
-           int32_t, uint8_t, uint16_t, uint32_t};
+use libc::{c_float, c_int, c_char, c_uint, c_void, int16_t, int32_t, uint8_t, uint16_t, uint32_t};
 use gesture::SDL_GestureID;
 use keyboard::SDL_Keysym;
 use touch::SDL_FingerID;
@@ -38,6 +37,7 @@ pub const SDL_KEYDOWN: SDL_EventType = 768;
 pub const SDL_KEYUP: SDL_EventType = 769;
 pub const SDL_TEXTEDITING: SDL_EventType = 770;
 pub const SDL_TEXTINPUT: SDL_EventType = 771;
+pub const SDL_KEYMAPCHANGED: SDL_EventType = 0x304;
 pub const SDL_MOUSEMOTION: SDL_EventType = 1024;
 pub const SDL_MOUSEBUTTONDOWN: SDL_EventType = 1025;
 pub const SDL_MOUSEBUTTONUP: SDL_EventType = 1026;
@@ -63,6 +63,10 @@ pub const SDL_DOLLARRECORD: SDL_EventType = 2049;
 pub const SDL_MULTIGESTURE: SDL_EventType = 2050;
 pub const SDL_CLIPBOARDUPDATE: SDL_EventType = 2304;
 pub const SDL_DROPFILE: SDL_EventType = 4096;
+pub const SDL_AUDIODEVICEADDED: SDL_EventType = 0x1100;
+pub const SDL_AUDIODEVICEREMOVED: SDL_EventType = 0x1101;
+pub const SDL_RENDER_TARGETS_RESET: SDL_EventType = 0x2000;
+pub const SDL_RENDER_DEVICE_RESET: SDL_EventType = 0x2001;
 pub const SDL_USEREVENT: SDL_EventType = 32768;
 pub const SDL_LASTEVENT: SDL_EventType = 65535;
 
@@ -256,6 +260,18 @@ pub struct SDL_ControllerDeviceEvent {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
+pub struct SDL_AudioDeviceEvent {
+    pub type_: uint32_t,
+    pub timestamp: uint32_t,
+    pub which: uint32_t,
+    pub iscapture: uint8_t,
+    pub padding1: uint8_t,
+    pub padding2: uint8_t,
+    pub padding3: uint8_t,
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
 pub struct SDL_TouchFingerEvent {
     pub type_: uint32_t,
     pub timestamp: uint32_t,
@@ -411,6 +427,10 @@ impl SDL_Event {
         self.data.as_mut_ptr() as *mut _
     }
 
+    pub fn adevice(&mut self) -> *mut SDL_AudioDeviceEvent {
+        self.data.as_mut_ptr() as *mut _
+    }
+
     pub fn quit(&mut self) -> *mut SDL_QuitEvent {
         self.data.as_mut_ptr() as *mut _
     }
@@ -444,29 +464,28 @@ pub type SDL_eventaction = c_uint;
 pub const SDL_ADDEVENT: SDL_eventaction = 0;
 pub const SDL_PEEKEVENT: SDL_eventaction = 1;
 pub const SDL_GETEVENT: SDL_eventaction = 2;
-pub type SDL_EventFilter =
-    extern "C" fn(userdata: *mut c_void, event: *mut SDL_Event) -> c_int;
+pub type SDL_EventFilter = extern "C" fn(userdata: *mut c_void, event: *mut SDL_Event) -> c_int;
 
 extern "C" {
     pub fn SDL_free(mem: *mut c_void);
     pub fn SDL_PumpEvents();
-    pub fn SDL_PeepEvents(events: *mut SDL_Event, numevents: c_int,
-                                action: SDL_eventaction,
-                                minType: uint32_t, maxType: uint32_t) -> c_int;
+    pub fn SDL_PeepEvents(events: *mut SDL_Event,
+                          numevents: c_int,
+                          action: SDL_eventaction,
+                          minType: uint32_t,
+                          maxType: uint32_t)
+                          -> c_int;
     pub fn SDL_HasEvent(type_: uint32_t) -> SDL_bool;
-    pub fn SDL_HasEvents(minType: uint32_t, maxType: uint32_t) ->
-              SDL_bool;
+    pub fn SDL_HasEvents(minType: uint32_t, maxType: uint32_t) -> SDL_bool;
     pub fn SDL_FlushEvent(type_: uint32_t);
     pub fn SDL_FlushEvents(minType: uint32_t, maxType: uint32_t);
     pub fn SDL_PollEvent(event: *mut SDL_Event) -> c_int;
     pub fn SDL_WaitEvent(event: *mut SDL_Event) -> c_int;
-    pub fn SDL_WaitEventTimeout(event: *mut SDL_Event, timeout: c_int) ->
-              c_int;
+    pub fn SDL_WaitEventTimeout(event: *mut SDL_Event, timeout: c_int) -> c_int;
     pub fn SDL_PushEvent(event: *mut SDL_Event) -> c_int;
-    pub fn SDL_SetEventFilter(filter: SDL_EventFilter,
-                                    userdata: *mut c_void);
-    /*pub fn SDL_GetEventFilter(filter: *SDL_EventFilter,
-                                    userdata: **c_void) -> SDL_bool;*/
+    pub fn SDL_SetEventFilter(filter: SDL_EventFilter, userdata: *mut c_void);
+    // pub fn SDL_GetEventFilter(filter: *SDL_EventFilter,
+    // userdata: **c_void) -> SDL_bool;
     pub fn SDL_AddEventWatch(filter: SDL_EventFilter, userdata: *mut c_void);
     pub fn SDL_DelEventWatch(filter: SDL_EventFilter, userdata: *mut c_void);
     pub fn SDL_FilterEvents(filter: SDL_EventFilter, userdata: *mut c_void);
