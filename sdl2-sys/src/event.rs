@@ -147,7 +147,7 @@ pub struct SDL_MouseButtonEvent {
     pub which: uint32_t,
     pub button: uint8_t,
     pub state: uint8_t,
-    pub padding1: uint8_t,
+    pub clicks: uint8_t,
     pub padding2: uint8_t,
     pub x: int32_t,
     pub y: int32_t,
