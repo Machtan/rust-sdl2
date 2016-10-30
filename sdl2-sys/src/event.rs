@@ -162,6 +162,7 @@ pub struct SDL_MouseWheelEvent {
     pub which: uint32_t,
     pub x: int32_t,
     pub y: int32_t,
+    pub direction: uint32_t,
 }
 
 #[derive(Copy, Clone)]
