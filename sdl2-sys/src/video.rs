@@ -26,6 +26,7 @@ pub const SDL_WINDOWPOS_CENTERED: SDL_WindowPos = 0x2FFF0000;
 pub const SDL_WINDOWPOS_UNDEFINED: SDL_WindowPos = 0x1FFF0000;
 
 #[derive(Copy, Clone)]
+#[repr(u32)] // These are uint32_t in SDL_CreateWindow
 pub enum SDL_WindowFlags {
     SDL_WINDOW_FULLSCREEN = 0x00000001,
     SDL_WINDOW_OPENGL = 0x00000002,
@@ -42,6 +43,7 @@ pub enum SDL_WindowFlags {
     SDL_WINDOW_FOREIGN = 0x00000800,
     SDL_WINDOW_ALLOW_HIGHDPI = 0x00002000
 }
+pub use SDL_WindowFlags::*;
 
 #[derive(Copy, Clone)]
 pub enum SDL_WindowEventID {
