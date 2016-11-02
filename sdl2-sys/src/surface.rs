@@ -42,7 +42,6 @@ extern "C" {
     pub fn SDL_SetSurfacePalette(surface: *mut SDL_Surface, palette: *mut SDL_Palette) -> c_int;
     pub fn SDL_LockSurface(surface: *mut SDL_Surface) -> c_int;
     pub fn SDL_UnlockSurface(surface: *mut SDL_Surface);
-    pub fn SDL_LoadBMP(file: *const c_char) -> *mut SDL_Surface;
     pub fn SDL_LoadBMP_RW(src: *mut SDL_RWops, freesrc: c_int) ->  *mut SDL_Surface;
     pub fn SDL_SaveBMP_RW(surface: *mut SDL_Surface, dst: *mut SDL_RWops, freedst: c_int) -> c_int;
     pub fn SDL_SetSurfaceRLE(surface: *mut SDL_Surface, flag: c_int) -> c_int;
