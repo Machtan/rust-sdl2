@@ -2,7 +2,7 @@ use pixels::SDL_PixelFormat;
 use pixels::SDL_Palette;
 use rwops::SDL_RWops;
 use rect::SDL_Rect;
-use libc::{c_int, c_void, uint32_t, uint8_t, c_char};
+use libc::{c_int, c_void, uint32_t, uint8_t};
 use render::SDL_BlendMode;
 use sdl::SDL_bool;
 

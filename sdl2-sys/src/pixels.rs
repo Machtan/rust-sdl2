@@ -1,4 +1,4 @@
-use libc::{c_int, uint8_t, uint32_t};
+use libc::{c_int, uint8_t, uint32_t, c_char};
 use sdl::SDL_bool;
 
 //SDL_pixels.h
@@ -87,7 +87,8 @@ extern "C" {
     pub fn SDL_GetRGBA(pixel: uint32_t, format: *mut SDL_PixelFormat, r: *mut uint8_t, g: *mut uint8_t, b: *mut uint8_t, a: *mut uint8_t);
     pub fn SDL_MapRGB(format: *mut SDL_PixelFormat, r: uint8_t, g: uint8_t, b: uint8_t) -> uint32_t;
     pub fn SDL_MapRGBA(format: *mut SDL_PixelFormat, r: uint8_t, g: uint8_t, b: uint8_t, a: uint8_t) -> uint32_t;
-
+    
+    pub fn SDL_GetPixelFormatName(format: uint32_t) -> *const c_char;
     pub fn SDL_PixelFormatEnumToMasks(format: uint32_t, bpp: *mut c_int, rmask: *mut uint32_t, gmask: *mut uint32_t, bmask: *mut uint32_t, amask: *mut uint32_t) -> SDL_bool;
     pub fn SDL_MasksToPixelFormatEnum(bpp: c_int, rmask: uint32_t, gmask: uint32_t, bmask: uint32_t, amask: uint32_t) -> uint32_t;
 
